@@ -12,33 +12,21 @@ const Modal = {
   save() {},
 };
 
+const Storage = {
+  get() {
+    return JSON.parse(localStorage.getItem('dev.finances:transactions')) || [];
+  },
+
+  set(transactions) {
+    localStorage.setItem(
+      'dev.finances:transactions',
+      JSON.stringify(transactions)
+    );
+  },
+};
+
 const Transactions = {
-  all: [
-    {
-      id: 1,
-      description: 'Luz',
-      amount: -50000,
-      date: '27/06/2021',
-    },
-    {
-      id: 2,
-      description: 'Criação web site',
-      amount: 500000,
-      date: '27/06/2021',
-    },
-    {
-      id: 3,
-      description: 'Internet',
-      amount: -20000,
-      date: '27/06/2021',
-    },
-    {
-      id: 4,
-      description: 'Pagamento',
-      amount: 10000,
-      date: '27/06/2021',
-    },
-  ],
+  all: Storage.get(),
 
   add(transaction) {
     Transactions.all.push(transaction);
@@ -220,21 +208,23 @@ const Form = {
 
 const App = {
   init() {
-    Transactions.all.forEach((transaction, index) => {
-      DOM.addTransaction(transaction, index);
-    });
-
     /*
     
     poderia ser escrito da seguinte maneira:
-
+    
     Transactions.all.forEach(DOM.addTransaction);
-
+    
     porque os parâmetros passados no forEach são os mesmos passados na função addTransaction.
     
     */
 
+    Transactions.all.forEach((transaction, index) => {
+      DOM.addTransaction(transaction, index);
+    });
+
     DOM.updateBalance();
+
+    Storage.set(Transactions.all);
   },
   reload() {
     DOM.clearTransactions();
