@@ -135,7 +135,7 @@ const Utils = {
 
   formatAmount(value) {
     value = Number(value) * 100;
-    console.log(value);
+    value = Math.round(value);
     return value;
   },
 
